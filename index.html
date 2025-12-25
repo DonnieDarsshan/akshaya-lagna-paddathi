@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Akshaya Lagna Paddathi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  background:radial-gradient(circle at top,#020617,#000000);
+  color:#f8fafc;
+  font-family:Segoe UI,Arial,sans-serif;
+  padding:20px;
+  max-width:1300px;
+  margin:auto;
+}
+h1{
+  color:#facc15;
+  text-shadow:0 0 12px #92400e;
+  margin-bottom:6px;
+}
+.subtitle-inline{
+  font-size:14px;
+  font-weight:500;
+  color:#93c5fd;
+  margin-left:14px;
+  opacity:.85;
+}
+.panel{
+  border:1px solid #334155;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:14px;
+  background:linear-gradient(180deg,#020617,#020617dd);
+}
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+input,select,button{
+  background:#020617;
+  color:#f8fafc;
+  border:1px solid #475569;
+  padding:6px 10px;
+  border-radius:8px;
+  font-weight:600;
+}
+button:hover{background:#1e293b;cursor:pointer}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:14px;
+}
+th,td{
+  border:1px solid #334155;
+  padding:7px;
+  text-align:center;
+}
+th{
+  background:#020617;
+  color:#facc15;
+}
+.alp-changer{
+  border:1px solid #334155;
+  padding:14px;
+  border-radius:12px;
+  margin-top:18px;
+  background:linear-gradient(180deg,#020617,#020617dd);
+}
+.alp-changer-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.alp-btn{
+  font-size:20px;
+  padding:8px 18px;
+  border-radius:12px;
+  font-weight:900;
+}
+.alp-label{
+  font-size:17px;
+  font-weight:800;
+  color:#facc15;
+  min-width:260px;
+}
+.alp-dates{
+  font-size:13px;
+  color:#93c5fd;
+}
+.west-box{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-left:10px;
+  font-size:13px;
+  color:#93c5fd;
+}
+</style>
+</head>
+
+<body>
+
+<h1>
+  Akshaya Lagna Paddathi
+  <span class="subtitle-inline">ALP Lagna progresses with time · Planets remain fixed</span>
+</h1>
+
+<div class="panel">
+  <div class="row">
+    <b>DOB</b>
+    <input type="date" id="dob">
+
+    <b>Transit</b>
+    <input type="date" id="transitDate">
+    <button id="todayBtn">Current Transit</button>
+
+    <b>Move</b>
+    <select id="stepSelect">
+      <option value="1">1 Day</option>
+      <option value="3">3 Days</option>
+      <option value="5">5 Days</option>
+      <option value="10">10 Days</option>
+      <option value="15">Fortnight</option>
+      <option value="30" selected>1 Month</option>
+      <option value="91">3 Months</option>
+      <option value="182.5">6 Months</option>
+      <option value="365">1 Year</option>
+    </select>
+    <button id="prevBtn">◀</button>
+    <button id="nextBtn">▶</button>
+
+    <label><input type="radio" name="houseSystem" value="Vedic" checked> Vedic</label>
+    <label><input type="radio" name="houseSystem" value="KP"> KP</label>
+
+    <label class="west-box">
+      <input type="checkbox" id="westAspectToggle">
+      West Asp (−180°)
+    </label>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="row">
+    <b>Birth Lagna</b>
+    <select id="birthSign"><option value="">Sign</option></select>
+    <select id="birthDeg"><option value="">Deg</option></select>
+    <select id="birthMin"></select>
+  </div>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th>Planet</th>
+  <th>Sign</th>
+  <th>Deg</th>
+  <th>Min</th>
+  <th>House</th>
+  <th>Degree Diff</th>
+  <th>Aspect</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+  <th>ALP House</th>
+  <th>Nakshatra &amp; Pada</th>
+  <th>Nakshatra Lord</th>
+  <th>House from ALP</th>
+</tr>
+</thead>
+<tbody id="alpNakshatraBody"></tbody>
+</table>
+
+<div class="panel">
+  <button id="clearBtn">Clear All</button>
+  <button id="saveBtn">Save Chart</button>
+  <button id="loadBtn">Load Chart</button>
+  <input type="file" id="fileInput" accept=".json" hidden>
+</div>
+
+<div class="alp-changer">
+  <div class="alp-changer-row">
+    <button class="alp-btn" id="alpSignPrev">◀</button>
+    <div class="alp-label" id="alpSignLabel">—</div>
+    <button class="alp-btn" id="alpSignNext">▶</button>
+    <div class="alp-dates">
+      From : <span id="alpSignStart">—</span> |
+      To : <span id="alpSignEnd">—</span>
+    </div>
+  </div>
+
+  <div class="alp-changer-row">
+    <button class="alp-btn" id="alpPadaPrev">◀</button>
+    <div class="alp-label" id="alpPadaLabel">—</div>
+    <button class="alp-btn" id="alpPadaNext">▶</button>
+    <div class="alp-dates">
+      From : <span id="alpPadaStart">—</span> |
+      To : <span id="alpPadaEnd">—</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const EPS=1e-9;
+const ALP_SPEED=3/365;
+
+const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const PLANETS=[
+  "ALP",
+  "Surya",
+  "Chandra",
+  "Mangala",
+  "Rahu",
+  "Guru",
+  "Shani",
+  "Budha",
+  "Ketu",
+  "Shukra"
+];
+
+
+const LORD_MAP={Sun:"Surya",Moon:"Chandra",Mars:"Mangala",Mercury:"Budha",Jupiter:"Guru",Venus:"Shukra",Saturn:"Shani",Rahu:"Rahu",Ketu:"Ketu"};
+
+const NAKSHATRAS=[
+["Ashwini","Ketu"],["Bharani","Venus"],["Krittika","Sun"],["Rohini","Moon"],
+["Mrigashira","Mars"],["Ardra","Rahu"],["Punarvasu","Jupiter"],["Pushya","Saturn"],
+["Ashlesha","Mercury"],["Magha","Ketu"],["Purva Phalguni","Venus"],["Uttara Phalguni","Sun"],
+["Hasta","Moon"],["Chitra","Mars"],["Swati","Rahu"],["Vishakha","Jupiter"],
+["Anuradha","Saturn"],["Jyeshtha","Mercury"],["Mula","Ketu"],["Purva Ashadha","Venus"],
+["Uttara Ashadha","Sun"],["Shravana","Moon"],["Dhanishta","Mars"],["Shatabhisha","Rahu"],
+["Purva Bhadrapada","Jupiter"],["Uttara Bhadrapada","Saturn"],["Revati","Mercury"]
+];
+
+const ASPECTS=[
+{n:"Conjunction",d:0,o:8},{n:"Semi-Sextile",d:30,o:3},
+{n:"Square",d:90,o:6},{n:"Trine",d:120,o:6},
+{n:"Opposition",d:180,o:8}
+];
+
+const data={};
+PLANETS.forEach(p=>data[p]={sign:"",deg:0,min:0});
+
+SIGNS.forEach(s=>birthSign.add(new Option(s,s)));
+for(let i=0;i<30;i++)birthDeg.add(new Option(i,i));
+for(let i=0;i<60;i++)birthMin.add(new Option(i,i));
+birthMin.value="0";
+
+function absDeg(sign,deg,min){
+  return SIGNS.indexOf(sign)*30 + deg + min/60;
+}
+
+let manualALPAbs=null;
+
+function computeALPAbs(){
+  const birthAbs=absDeg(birthSign.value,+birthDeg.value,+birthMin.value);
+  if(manualALPAbs!==null)return (manualALPAbs+360)%360;
+  const days=(new Date(transitDate.value)-new Date(dob.value))/86400000;
+  return (birthAbs + days*ALP_SPEED + 360)%360;
+}
+</script>
+
+<!-- ================== PART 2 ================== -->
+
+<script>
+/* ================== DATE DERIVATION ================== */
+
+function alpAbsToDate(targetAbs){
+  const birthAbs = absDeg(birthSign.value,+birthDeg.value,+birthMin.value);
+  const delta = (targetAbs - birthAbs + 360) % 360;
+  const days = delta / ALP_SPEED;
+  const d = new Date(dob.value);
+  d.setDate(d.getDate() + Math.round(days));
+  return d.toISOString().split("T")[0];
+}
+
+/* ================== BUILD TABLE ================== */
+
+function buildTable(){
+  tableBody.innerHTML="";
+  PLANETS.forEach(p=>{
+    if(p==="ALP"){
+      tableBody.innerHTML+=`
+      <tr>
+        <td>ALP</td>
+        <td id="alp_sign"></td>
+        <td id="alp_deg"></td>
+        <td id="alp_min"></td>
+        <td id="house_ALP"></td>
+        <td id="diff_ALP"></td>
+        <td id="aspect_ALP"></td>
+      </tr>`;
+    }else{
+      tableBody.innerHTML+=`
+      <tr>
+        <td>${p}</td>
+        <td><select data-p="${p}" data-t="sign"><option></option>${SIGNS.map(s=>`<option>${s}</option>`).join("")}</select></td>
+        <td><select data-p="${p}" data-t="deg">${[...Array(30).keys()].map(i=>`<option>${i}</option>`).join("")}</select></td>
+        <td><select data-p="${p}" data-t="min">${[...Array(60).keys()].map(i=>`<option>${i}</option>`).join("")}</select></td>
+        <td id="house_${p}"></td>
+        <td id="diff_${p}"></td>
+        <td id="aspect_${p}"></td>
+      </tr>`;
+    }
+  });
+
+  tableBody.querySelectorAll("select").forEach(sel=>{
+    const p=sel.dataset.p;
+    sel.value=data[p][sel.dataset.t] ?? "";
+    sel.onchange=()=>{
+      data[p][sel.dataset.t]=sel.value;
+      recalc();
+    };
+  });
+}
+
+/* ================== ASPECT ================== */
+
+function getAspect(diff){
+  for(const a of ASPECTS){
+    if(Math.abs(diff-a.d)<=a.o || Math.abs(360-diff-a.d)<=a.o){
+      return a.n;
+    }
+  }
+  return "";
+}
+
+/* ================== RECALC (FIXED WEST ASP LOGIC) ================== */
+
+function recalc(){
+  if(!dob.value||!transitDate.value||!birthSign.value||birthDeg.value==="")return;
+
+  const alpAbs = computeALPAbs();
+  const birthAbs = absDeg(birthSign.value,+birthDeg.value,+birthMin.value);
+
+  const sIdx=Math.floor(alpAbs/30);
+  const d=Math.floor(alpAbs%30);
+  const m=Math.floor(((alpAbs%30)-d)*60);
+
+  alp_sign.textContent = SIGNS[sIdx];
+  alp_deg.textContent = d;
+  alp_min.textContent = m;
+
+  const diffBirth=(alpAbs-birthAbs+360)%360;
+  house_ALP.textContent=Math.floor(diffBirth/30)+1;
+  diff_ALP.textContent=diffBirth.toFixed(2)+"°";
+  aspect_ALP.textContent=getAspect(diffBirth);
+
+  const hs=document.querySelector('input[name="houseSystem"]:checked').value;
+  const westAsp=document.getElementById("westAspectToggle").checked;
+
+  PLANETS.forEach(p=>{
+    if(p==="ALP"||!data[p].sign)return;
+
+    let pAbs = absDeg(data[p].sign,+data[p].deg,+data[p].min);
+
+    /* FORCE RAHU–KETU OPPOSITION INTERNALLY */
+    if(p==="Ketu" && data["Rahu"].sign){
+      const rAbs=absDeg(data["Rahu"].sign,+data["Rahu"].deg,+data["Rahu"].min);
+      pAbs=(rAbs+180)%360;
+    }
+
+    /* RAW DIFF = ALWAYS USED FOR HOUSE */
+    const rawDiff=(pAbs-alpAbs+360)%360;
+
+    let house=(hs==="KP")?Math.floor(rawDiff/30)+1:Math.floor((rawDiff+15)/30)+1;
+    if(house>12)house-=12;
+    document.getElementById("house_"+p).textContent=house;
+
+    /* DISPLAY DIFF ONLY */
+    let showDiff=rawDiff;
+    if(westAsp && showDiff>181 && showDiff<=359){
+      showDiff=Math.abs(showDiff-180);
+    }
+
+    document.getElementById("diff_"+p).textContent=showDiff.toFixed(2)+"°";
+    document.getElementById("aspect_"+p).textContent=getAspect(showDiff);
+  });
+
+  buildALPNakshatraTable(alpAbs);
+}
+
+/* ================== INIT ================== */
+
+buildTable();
+transitDate.value=new Date().toISOString().split("T")[0];
+
+/* ================== EVENTS ================== */
+
+/* ================== PATCH : INPUT RESET HANDLERS ================== */
+
+/* ONLY REAL DATE / BIRTH CHANGES SHOULD RESET ALP */
+["dob","transitDate","birthSign","birthDeg","birthMin"].forEach(id=>{
+  document.getElementById(id).onchange = ()=>{
+    manualALPAbs = null;
+    recalc();
+  };
+});
+
+/* WEST ASP TOGGLE — DISPLAY ONLY (NO RESET, NO DATE CHANGE) */
+westAspectToggle.onchange = ()=>{
+  recalc();
+};
+
+
+document.querySelectorAll('input[name="houseSystem"]').forEach(r=>{
+  r.onchange=recalc;
+});
+
+todayBtn.onclick=()=>{
+  manualALPAbs=null;
+  transitDate.value=new Date().toISOString().split("T")[0];
+  recalc();
+};
+
+prevBtn.onclick=()=>{
+  const d=new Date(transitDate.value);
+  d.setDate(d.getDate()-Number(stepSelect.value));
+  transitDate.value=d.toISOString().split("T")[0];
+  manualALPAbs=null;
+  recalc();
+};
+
+nextBtn.onclick=()=>{
+  const d=new Date(transitDate.value);
+  d.setDate(d.getDate()+Number(stepSelect.value));
+  transitDate.value=d.toISOString().split("T")[0];
+  manualALPAbs=null;
+  recalc();
+};
+</script>
+
+<!-- ================== PART 3 ================== -->
+
+<script>
+/* ================== ALP → NAKSHATRA TABLE ================== */
+
+function buildALPNakshatraTable(alpAbs){
+  alpNakshatraBody.innerHTML="";
+
+  const nakSize = 360/27;
+  const padaSize = 360/108;
+
+  for(let h=1; h<=12; h++){
+    const deg = (alpAbs + (h-1)*30) % 360;
+    const nIndex = Math.floor((deg+EPS)/nakSize);
+    const pIndex = Math.floor(((deg+EPS)%nakSize)/padaSize)+1;
+
+    const lord = LORD_MAP[NAKSHATRAS[nIndex][1]];
+    const lordHouseCell = document.getElementById("house_"+lord);
+
+    alpNakshatraBody.innerHTML += `
+      <tr>
+        <td>${h}</td>
+        <td>${NAKSHATRAS[nIndex][0]} – Pada ${pIndex}</td>
+        <td>${lord}</td>
+        <td>${lordHouseCell ? lordHouseCell.textContent : ""}</td>
+      </tr>
+    `;
+  }
+}
+
+/* ================== PURE ALP CONTROLS ================== */
+
+const PADA_SIZE = 360/108;
+const NAK_SIZE  = 360/27;
+
+function getSignIndex(abs){
+  return Math.floor(((abs%360)+EPS)/30);
+}
+function getNakIndex(abs){
+  return Math.floor(((abs%360)+EPS)/NAK_SIZE);
+}
+function getPadaIndex(abs){
+  return Math.floor(((abs%360)+EPS)/PADA_SIZE);
+}
+
+/* ================== UI DATE SYNC ================== */
+
+function updateALPControls(alpAbs){
+
+  const sIdx = getSignIndex(alpAbs);
+  alpSignLabel.textContent = SIGNS[sIdx];
+
+  const signStartAbs = sIdx * 30;
+  const signEndAbs   = (sIdx + 1) * 30;
+
+  alpSignStart.textContent = alpAbsToDate(signStartAbs);
+  alpSignEnd.textContent   = alpAbsToDate(signEndAbs);
+
+  const nIdx = getNakIndex(alpAbs);
+  const pIdx = (getPadaIndex(alpAbs) % 4) + 1;
+
+  alpPadaLabel.textContent =
+    NAKSHATRAS[nIdx][0] + " – Pada " + pIdx;
+
+  const padaIndex = getPadaIndex(alpAbs);
+  const padaStartAbs = padaIndex * PADA_SIZE;
+  const padaEndAbs   = padaStartAbs + PADA_SIZE;
+
+  alpPadaStart.textContent = alpAbsToDate(padaStartAbs);
+  alpPadaEnd.textContent   = alpAbsToDate(padaEndAbs);
+}
+
+/* ================== SIGN BUTTONS ================== */
+
+alpSignPrev.onclick = ()=>{
+  if(!dob.value || !birthSign.value)return;
+  const idx = (getSignIndex(computeALPAbs()) + 11) % 12;
+  manualALPAbs = idx * 30;
+  recalc();
+};
+
+alpSignNext.onclick = ()=>{
+  if(!dob.value || !birthSign.value)return;
+  const idx = (getSignIndex(computeALPAbs()) + 1) % 12;
+  manualALPAbs = idx * 30;
+  recalc();
+};
+
+/* ================== PADA BUTTONS ================== */
+
+alpPadaPrev.onclick = ()=>{
+  if(!dob.value || !birthSign.value)return;
+  let idx = getPadaIndex(computeALPAbs()) - 1;
+  if(idx < 0) idx = 107;
+  manualALPAbs = (idx * PADA_SIZE) + (PADA_SIZE / 2);
+  recalc();
+};
+
+
+alpPadaNext.onclick = ()=>{
+  if(!dob.value || !birthSign.value)return;
+  let idx = getPadaIndex(computeALPAbs()) + 1;
+  if(idx > 107) idx = 0;
+  manualALPAbs = (idx * PADA_SIZE) + (PADA_SIZE / 2);
+  recalc();
+};
+
+
+/* ================== SAFE RECALC WRAP ================== */
+
+const __recalc_locked = recalc;
+recalc = function(){
+  if(!dob.value || !transitDate.value || !birthSign.value || birthDeg.value==="")return;
+  __recalc_locked();
+  updateALPControls(computeALPAbs());
+};
+
+/* ================== SAVE / LOAD / CLEAR ================== */
+
+saveBtn.onclick = ()=>{
+  const blob = new Blob([JSON.stringify({
+    dob:dob.value,
+    transit:transitDate.value,
+    birth:{sign:birthSign.value,deg:birthDeg.value,min:birthMin.value},
+    data,
+    manualALPAbs
+  },null,2)],{type:"application/json"});
+
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="alp_chart.json";
+  a.click();
+};
+
+loadBtn.onclick = ()=>fileInput.click();
+
+fileInput.onchange = e=>{
+  const r=new FileReader();
+  r.onload=()=>{
+    const o=JSON.parse(r.result);
+
+    dob.value=o.dob||"";
+    transitDate.value=o.transit||"";
+    birthSign.value=o.birth?.sign||"";
+    birthDeg.value=o.birth?.deg||"";
+    birthMin.value=o.birth?.min||"0";
+
+    Object.keys(data).forEach(p=>{
+      if(o.data && o.data[p]){
+        data[p].sign=o.data[p].sign;
+        data[p].deg=o.data[p].deg;
+        data[p].min=o.data[p].min;
+      }
+    });
+
+    manualALPAbs=(o.manualALPAbs!==undefined)?o.manualALPAbs:null;
+
+    buildTable();
+    setTimeout(recalc,0);
+  };
+  r.readAsText(e.target.files[0]);
+};
+
+clearBtn.onclick = ()=>{
+  if(!confirm("Clear entire chart?"))return;
+  Object.keys(data).forEach(p=>data[p]={sign:"",deg:0,min:0});
+  birthSign.value="";
+  birthDeg.value="";
+  birthMin.value="0";
+  manualALPAbs=null;
+  buildTable();
+  recalc();
+};
+
+/* ================== INIT ALIGN ================== */
+
+setTimeout(()=>{
+  if(dob.value && transitDate.value && birthSign.value){
+    updateALPControls(computeALPAbs());
+  }
+},200);
+
+</script>
+
+</body>
+</html>
