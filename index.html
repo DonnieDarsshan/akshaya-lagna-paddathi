@@ -160,6 +160,7 @@ th{
   <th>Sign</th>
   <th>Deg</th>
   <th>Min</th>
+  <th>Sec</th>
   <th>House</th>
   <th>Degree Diff</th>
   <th>Aspect</th>
@@ -175,6 +176,7 @@ th{
   <th>Nakshatra &amp; Pada</th>
   <th>Nakshatra Lord</th>
   <th>House from ALP</th>
+  <th>Lords of ALP</th>
 </tr>
 </thead>
 <tbody id="alpNakshatraBody"></tbody>
@@ -247,15 +249,15 @@ const ASPECTS=[
 ];
 
 const data={};
-PLANETS.forEach(p=>data[p]={sign:"",deg:0,min:0});
+PLANETS.forEach(p=>data[p]={sign:"",deg:0,min:0,sec:0});
 
 SIGNS.forEach(s=>birthSign.add(new Option(s,s)));
 for(let i=0;i<30;i++)birthDeg.add(new Option(i,i));
 for(let i=0;i<60;i++)birthMin.add(new Option(i,i));
 birthMin.value="0";
 
-function absDeg(sign,deg,min){
-  return SIGNS.indexOf(sign)*30 + deg + min/60;
+function absDeg(sign,deg,min,sec=0){
+  return SIGNS.indexOf(sign)*30 + deg + min/60 + sec/3600;
 }
 
 let manualALPAbs=null;
@@ -294,6 +296,7 @@ function buildTable(){
         <td id="alp_sign"></td>
         <td id="alp_deg"></td>
         <td id="alp_min"></td>
+        <td id="alp_sec"></td>
         <td id="house_ALP"></td>
         <td id="diff_ALP"></td>
         <td id="aspect_ALP"></td>
@@ -302,9 +305,32 @@ function buildTable(){
       tableBody.innerHTML+=`
       <tr>
         <td>${p}</td>
-        <td><select data-p="${p}" data-t="sign"><option></option>${SIGNS.map(s=>`<option>${s}</option>`).join("")}</select></td>
-        <td><select data-p="${p}" data-t="deg">${[...Array(30).keys()].map(i=>`<option>${i}</option>`).join("")}</select></td>
-        <td><select data-p="${p}" data-t="min">${[...Array(60).keys()].map(i=>`<option>${i}</option>`).join("")}</select></td>
+
+        <td>
+          <select data-p="${p}" data-t="sign">
+            <option></option>
+            ${SIGNS.map(s=>`<option>${s}</option>`).join("")}
+          </select>
+        </td>
+
+        <td>
+          <select data-p="${p}" data-t="deg">
+            ${[...Array(30).keys()].map(i=>`<option>${i}</option>`).join("")}
+          </select>
+        </td>
+
+        <td>
+          <select data-p="${p}" data-t="min">
+            ${[...Array(60).keys()].map(i=>`<option>${i}</option>`).join("")}
+          </select>
+        </td>
+
+        <td>
+          <select data-p="${p}" data-t="sec">
+            ${[...Array(60).keys()].map(i=>`<option>${i}</option>`).join("")}
+          </select>
+        </td>
+
         <td id="house_${p}"></td>
         <td id="diff_${p}"></td>
         <td id="aspect_${p}"></td>
@@ -313,14 +339,16 @@ function buildTable(){
   });
 
   tableBody.querySelectorAll("select").forEach(sel=>{
-    const p=sel.dataset.p;
-    sel.value=data[p][sel.dataset.t] ?? "";
-    sel.onchange=()=>{
-      data[p][sel.dataset.t]=sel.value;
+    const p = sel.dataset.p;
+    const t = sel.dataset.t;
+    sel.value = data[p][t] ?? "";
+    sel.onchange = ()=>{
+      data[p][t] = sel.value;
       recalc();
     };
   });
 }
+
 
 /* ================== ASPECT ================== */
 
@@ -360,11 +388,23 @@ function recalc(){
   PLANETS.forEach(p=>{
     if(p==="ALP"||!data[p].sign)return;
 
-    let pAbs = absDeg(data[p].sign,+data[p].deg,+data[p].min);
+		let pAbs = absDeg(
+	  data[p].sign,
+	  +data[p].deg,
+	  +data[p].min,
+	  +data[p].sec
+	);
+
 
     /* FORCE RAHU–KETU OPPOSITION INTERNALLY */
     if(p==="Ketu" && data["Rahu"].sign){
-      const rAbs=absDeg(data["Rahu"].sign,+data["Rahu"].deg,+data["Rahu"].min);
+		  const rAbs = absDeg(
+		  data["Rahu"].sign,
+		  +data["Rahu"].deg,
+		  +data["Rahu"].min,
+		  +data["Rahu"].sec
+		);
+
       pAbs=(rAbs+180)%360;
     }
 
@@ -438,31 +478,57 @@ nextBtn.onclick=()=>{
 };
 </script>
 
-<!-- ================== PART 3 ================== -->
 
+
+
+
+
+
+
+
+
+
+
+<!-- ================== PART 3 ================== -->
 <script>
 /* ================== ALP → NAKSHATRA TABLE ================== */
 
-function buildALPNakshatraTable(alpAbs){
-  alpNakshatraBody.innerHTML="";
+/* -------- SAFE NORMALIZATION (FIXES PADA BUG) -------- */
+function norm360(x){
+  return ((x % 360) + 360) % 360;
+}
 
-  const nakSize = 360/27;
-  const padaSize = 360/108;
+function buildALPNakshatraTable(alpAbs){
+
+  alpNakshatraBody.innerHTML = "";
+
+  const nakSize  = 360 / 27;
+  const padaSize = 360 / 108;
+
+  const base = norm360(alpAbs);
 
   for(let h=1; h<=12; h++){
-    const deg = (alpAbs + (h-1)*30) % 360;
-    const nIndex = Math.floor((deg+EPS)/nakSize);
-    const pIndex = Math.floor(((deg+EPS)%nakSize)/padaSize)+1;
+
+    const deg = norm360(base + (h-1)*30);
+
+    const nIndex = Math.floor(deg / nakSize);
+    const pIndex = Math.floor((deg % nakSize) / padaSize) + 1;
 
     const lord = LORD_MAP[NAKSHATRAS[nIndex][1]];
+
     const lordHouseCell = document.getElementById("house_"+lord);
+    const placedHouse  = lordHouseCell ? lordHouseCell.textContent : "";
+
+    /* 🔥 ALAS LORDSHIP FROM PART 4.1 */
+    const lordsOf = getLordsOfPlanetFromALP(lord).join(",");
 
     alpNakshatraBody.innerHTML += `
       <tr>
         <td>${h}</td>
         <td>${NAKSHATRAS[nIndex][0]} – Pada ${pIndex}</td>
         <td>${lord}</td>
-        <td>${lordHouseCell ? lordHouseCell.textContent : ""}</td>
+        <td>${placedHouse}</td>
+        <td>${lordsOf}</td>
       </tr>
     `;
   }
@@ -474,20 +540,22 @@ const PADA_SIZE = 360/108;
 const NAK_SIZE  = 360/27;
 
 function getSignIndex(abs){
-  return Math.floor(((abs%360)+EPS)/30);
+  return Math.floor(norm360(abs) / 30);
 }
 function getNakIndex(abs){
-  return Math.floor(((abs%360)+EPS)/NAK_SIZE);
+  return Math.floor(norm360(abs) / NAK_SIZE);
 }
 function getPadaIndex(abs){
-  return Math.floor(((abs%360)+EPS)/PADA_SIZE);
+  return Math.floor(norm360(abs) / PADA_SIZE);
 }
 
 /* ================== UI DATE SYNC ================== */
 
 function updateALPControls(alpAbs){
 
-  const sIdx = getSignIndex(alpAbs);
+  const a = norm360(alpAbs);
+
+  const sIdx = Math.floor(a / 30);
   alpSignLabel.textContent = SIGNS[sIdx];
 
   const signStartAbs = sIdx * 30;
@@ -496,13 +564,13 @@ function updateALPControls(alpAbs){
   alpSignStart.textContent = alpAbsToDate(signStartAbs);
   alpSignEnd.textContent   = alpAbsToDate(signEndAbs);
 
-  const nIdx = getNakIndex(alpAbs);
-  const pIdx = (getPadaIndex(alpAbs) % 4) + 1;
+  const nIdx = Math.floor(a / NAK_SIZE);
+  const pIdx = (Math.floor(a / PADA_SIZE) % 4) + 1;
 
   alpPadaLabel.textContent =
     NAKSHATRAS[nIdx][0] + " – Pada " + pIdx;
 
-  const padaIndex = getPadaIndex(alpAbs);
+  const padaIndex = Math.floor(a / PADA_SIZE);
   const padaStartAbs = padaIndex * PADA_SIZE;
   const padaEndAbs   = padaStartAbs + PADA_SIZE;
 
@@ -536,7 +604,6 @@ alpPadaPrev.onclick = ()=>{
   recalc();
 };
 
-
 alpPadaNext.onclick = ()=>{
   if(!dob.value || !birthSign.value)return;
   let idx = getPadaIndex(computeALPAbs()) + 1;
@@ -545,8 +612,7 @@ alpPadaNext.onclick = ()=>{
   recalc();
 };
 
-
-/* ================== SAFE RECALC WRAP ================== */
+/* ================== SAFE RECALC WRAP (DO NOT BREAK LOAD) ================== */
 
 const __recalc_locked = recalc;
 recalc = function(){
@@ -562,9 +628,10 @@ saveBtn.onclick = ()=>{
     dob:dob.value,
     transit:transitDate.value,
     birth:{sign:birthSign.value,deg:birthDeg.value,min:birthMin.value},
-    data,
+    data,                 // includes sec automatically
     manualALPAbs
   },null,2)],{type:"application/json"});
+
 
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
@@ -585,13 +652,15 @@ fileInput.onchange = e=>{
     birthDeg.value=o.birth?.deg||"";
     birthMin.value=o.birth?.min||"0";
 
-    Object.keys(data).forEach(p=>{
-      if(o.data && o.data[p]){
-        data[p].sign=o.data[p].sign;
-        data[p].deg=o.data[p].deg;
-        data[p].min=o.data[p].min;
-      }
-    });
+		Object.keys(data).forEach(p=>{
+	  if(o.data && o.data[p]){
+		data[p].sign = o.data[p].sign;
+		data[p].deg  = o.data[p].deg;
+		data[p].min  = o.data[p].min;
+		data[p].sec  = o.data[p].sec ?? 0;
+	  }
+	});
+
 
     manualALPAbs=(o.manualALPAbs!==undefined)?o.manualALPAbs:null;
 
@@ -619,8 +688,303 @@ setTimeout(()=>{
     updateALPControls(computeALPAbs());
   }
 },200);
-
 </script>
+
+
+
+
+
+
+
+
+
+<!-- ================== PART 4.1 ================== -->
+<script>
+/* =========================================================
+   PART 4.1 : SIGN LORDSHIP FROM ALP (OPTION B – FINAL)
+   Rahu/Ketu = Dispositor lordships + Dispositor placement
+   ========================================================= */
+
+const SIGN_LORD = {
+  Aries:"Mangala", Taurus:"Shukra", Gemini:"Budha", Cancer:"Chandra",
+  Leo:"Surya", Virgo:"Budha", Libra:"Shukra", Scorpio:"Mangala",
+  Sagittarius:"Guru", Capricorn:"Shani", Aquarius:"Shani", Pisces:"Guru"
+};
+
+function getLordsOfPlanetFromALP(planet){
+
+  if(!birthSign.value || birthDeg.value==="") return [];
+
+  const alpAbs  = computeALPAbs();
+  const alpSign = SIGNS[getSignIndex(alpAbs)];
+  const start   = SIGNS.indexOf(alpSign);
+
+  let houses = [];
+
+  /* ---------- NORMAL SIGN OWNERSHIP ---------- */
+  for(let i=0;i<12;i++){
+    const sign = SIGNS[(start+i)%12];
+    if(SIGN_LORD[sign] === planet){
+      houses.push(i+1);
+    }
+  }
+
+  /* ---------- RAHU / KETU (ALAS RULE) ---------- */
+  if(planet==="Rahu" || planet==="Ketu"){
+
+    const nodeSign = data[planet].sign;
+    if(!nodeSign) return houses;
+
+    const dispositor = SIGN_LORD[nodeSign];
+    if(!dispositor) return houses;
+
+    /* 1️⃣ Dispositor’s sign lordships */
+    const dispLords = getLordsOfPlanetFromALP(dispositor);
+    dispLords.forEach(h=>{
+      if(!houses.includes(h)) houses.push(h);
+    });
+
+    /* 2️⃣ Dispositor’s placement house */
+    const placedCell = document.getElementById("house_"+dispositor);
+    if(placedCell){
+      const placed = Number(placedCell.textContent);
+      if(placed && !houses.includes(placed)){
+        houses.push(placed);
+      }
+    }
+  }
+
+  return houses.sort((a,b)=>a-b);
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     PART 5 : TABLE-3 (PLANET ENTITY BOXES – FINAL STABLE)
+     ========================================================= -->
+
+<!-- ===== TABLE-3 SHELL ===== -->
+<div id="table3-shell" style="margin-top:40px;"></div>
+
+<script>
+/* =========================================================
+   PART 5.1 : ASPECT RULES (KP STANDARD)
+   ========================================================= */
+const T3_ASPECT_RULES = {
+  Surya:[7],
+  Chandra:[7],
+  Budha:[7],
+  Shukra:[7],
+  Mangala:[4,7,8],
+  Guru:[5,7,9],
+  Shani:[3,7,10],
+  Rahu:[5,7,9],
+  Ketu:[5,7,9]
+};
+
+function getAspectHousesT3(planet, placed){
+  if(!placed) return [];
+  return (T3_ASPECT_RULES[planet] || []).map(d=>{
+    let h = placed + d - 1;
+    while(h > 12) h -= 12;
+    return h;
+  });
+}
+
+/* =========================================================
+   PART 5.2 : KP STAR / SUB / STAR-OF-SUB
+   ========================================================= */
+function getStarLordT3(p){
+  if(!data[p]?.sign) return "";
+	  const abs = absDeg(
+	  data[p].sign,
+	  +data[p].deg,
+	  +data[p].min,
+	  +data[p].sec
+	);
+
+  const ni  = Math.floor(abs / (360/27));
+  return LORD_MAP[NAKSHATRAS[ni][1]];
+}
+
+
+
+
+/* ================== KP SUB LORD (PROPORTIONAL – FINAL CORRECT) ================== */
+function getSubLordT3(p){
+  if(!data[p]?.sign) return "";
+
+  const abs = absDeg(
+    data[p].sign,
+    +data[p].deg,
+    +data[p].min,
+    +data[p].sec
+  );
+
+  const NAK_SIZE = 360 / 27;
+  const nakIndex = Math.floor(abs / NAK_SIZE);
+  const nakStart = nakIndex * NAK_SIZE;
+  const offset   = abs - nakStart;
+
+  const starLord = LORD_MAP[NAKSHATRAS[nakIndex][1]];
+
+  // Vimshottari order + years (KP standard)
+  const ORDER = [
+    {p:"Ketu", y:7},
+    {p:"Shukra", y:20},
+    {p:"Surya", y:6},
+    {p:"Chandra", y:10},
+    {p:"Mangala", y:7},
+    {p:"Rahu", y:18},
+    {p:"Guru", y:16},
+    {p:"Shani", y:19},
+    {p:"Budha", y:17}
+  ];
+
+  // Rotate order to start from STAR LORD
+  const start = ORDER.findIndex(o=>o.p===starLord);
+  const seq = ORDER.slice(start).concat(ORDER.slice(0,start));
+
+  let acc = 0;
+  for(const o of seq){
+    const span = (o.y / 120) * NAK_SIZE;
+    acc += span;
+    if(offset <= acc + 1e-9){
+      return o.p;
+    }
+  }
+
+  return "";
+}
+
+
+/* =========================================================
+   PART 5.3 : BUILD ONE PLANET BOX
+   ========================================================= */
+function buildPlanetBoxT3(planet){
+
+  const chain = [
+    {k:"Planet", p:planet},
+    {k:"Star Lord", p:getStarLordT3(planet)},
+    {k:"Sub Lord", p:getSubLordT3(planet)},
+    {k:"Star of Sub Lord", p:getStarLordT3(getSubLordT3(planet))}
+  ];
+
+  let html = `
+  <table style="margin-bottom:26px;">
+    <tr>
+      <th colspan="7" style="
+        font-size:20px;
+        padding:12px;
+        background:linear-gradient(180deg,#2a0f0f,#140707);
+        color:#ff9f1c;
+        border-bottom:2px solid #a86b17;">
+        ${planet}
+      </th>
+    </tr>
+    <tr>
+      <th>Entity</th>
+      <th>Planet</th>
+      <th>Lords of</th>
+      <th>Placed in</th>
+      <th>Final</th>
+      <th>Aspects</th>
+      <th>Summation</th>
+    </tr>
+  `;
+
+  chain.forEach(r=>{
+    if(!r.p) return;
+
+    const lords   = getLordsOfPlanetFromALP(r.p);
+    const placed  = Number(document.getElementById("house_"+r.p)?.textContent || 0);
+    const finalV  = [...new Set([...lords, placed].filter(Boolean))].sort((a,b)=>a-b);
+    const aspects = getAspectHousesT3(r.p, placed);
+    const sum     = [...new Set([...finalV, ...aspects])].sort((a,b)=>a-b);
+
+    html += `
+    <tr>
+      <td>${r.k}</td>
+      <td>${r.p}</td>
+      <td>${lords.join(",")}</td>
+      <td>${placed || ""}</td>
+      <td>${finalV.join(",")}</td>
+      <td>${aspects.join(",")}</td>
+      <td>${sum.join(",")}</td>
+    </tr>`;
+  });
+
+  html += `</table>`;
+  return html;
+}
+
+/* =========================================================
+   PART 5.4 : BUILD TABLE-3 (9 PLANET BOXES)
+   ========================================================= */
+function buildTable3(){
+
+  const shell = document.getElementById("table3-shell");
+  if(!shell) return;
+
+  shell.innerHTML = "";
+
+  const order = [
+    "Surya",
+    "Chandra",
+    "Mangala",
+    "Rahu",
+    "Guru",
+    "Shani",
+    "Budha",
+    "Ketu",
+    "Shukra"
+  ];
+
+  order.forEach(p=>{
+    shell.innerHTML += buildPlanetBoxT3(p);
+  });
+}
+
+/* =========================================================
+   PART 5.5 : SAFE AUTO-HOOK (NO DOUBLE REWRAP)
+   ========================================================= */
+if(!window.__T3_HOOKED__){
+  window.__T3_HOOKED__ = true;
+  const _origRecalc = recalc;
+  recalc = function(){
+    _origRecalc();
+    buildTable3();
+  };
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
