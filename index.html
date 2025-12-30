@@ -5,70 +5,131 @@
 <title>Akshaya Lagna Paddathi</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+
+
+
+
+
 <style>
+/* =========================================================
+   COSMIC VEDIC GOLD – FINAL FIXED
+   Center INSIDE boxes only • Original layout preserved
+   ========================================================= */
+
+:root{
+  --bg-main: radial-gradient(circle at top,#020617,#000000);
+  --panel-bg: linear-gradient(180deg,#020617,#020617dd);
+
+  --gold-main:#facc15;
+  --gold-soft:#fde047;
+  --saffron:#ff9f1c;
+  --bronze:#92400e;
+
+  --text-main:#f8fafc;
+  --text-dim:#93c5fd;
+
+  --border-soft:#334155;
+  --border-gold:#a16207;
+
+  --glow-gold:0 0 12px rgba(250,204,21,.45);
+}
+
+/* ================== BODY ================== */
 body{
-  background:radial-gradient(circle at top,#020617,#000000);
-  color:#f8fafc;
+  background:var(--bg-main);
+  color:var(--text-main);
   font-family:Segoe UI,Arial,sans-serif;
   padding:20px;
   max-width:1300px;
   margin:auto;
 }
-h1{
-  color:#facc15;
-  text-shadow:0 0 12px #92400e;
-  margin-bottom:6px;
+
+/* ================== HEADINGS (ALL TABLE TITLES) ================== */
+h1,
+h2{
+  color:var(--gold-main) !important;
+  text-shadow:var(--glow-gold);
+  letter-spacing:1.4px;
 }
-.subtitle-inline{
-  font-size:14px;
-  font-weight:500;
-  color:#93c5fd;
-  margin-left:14px;
-  opacity:.85;
-}
-.panel{
-  border:1px solid #334155;
-  padding:12px;
+
+/* ================== PANELS ================== */
+.panel,
+.alp-changer{
+  background:var(--panel-bg);
+  border:1px solid var(--border-soft);
   border-radius:12px;
-  margin-bottom:14px;
-  background:linear-gradient(180deg,#020617,#020617dd);
 }
+
+/* ================== ROWS (ORIGINAL FLOW) ================== */
 .row{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
 }
-input,select,button{
+
+/* ================== INPUTS (TEXT CENTER ONLY) ================== */
+input,
+select,
+button{
   background:#020617;
-  color:#f8fafc;
-  border:1px solid #475569;
+  color:var(--text-main);
+  border:1px solid var(--border-soft);
   padding:6px 10px;
   border-radius:8px;
   font-weight:600;
+  text-align:center;   /* ✅ inside box only */
 }
-button:hover{background:#1e293b;cursor:pointer}
+
+button:hover{
+  background:#1e293b;
+  cursor:pointer;
+  box-shadow:var(--glow-gold);
+}
+
+/* ================== TABLES ================== */
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:14px;
+  background:linear-gradient(180deg,#020617,#020617cc);
 }
-th,td{
-  border:1px solid #334155;
+
+/* CENTER ONLY INSIDE CELLS */
+th,
+td{
+  border:1px solid var(--border-soft);
   padding:7px;
-  text-align:center;
+  text-align:center;   /* ✅ inside box */
+  vertical-align:middle;
 }
+
+/* TABLE HEADER CELLS */
 th{
-  background:#020617;
-  color:#facc15;
+  background:linear-gradient(180deg,#1e293b,#020617);
+  color:var(--gold-main);
+  font-weight:900;
+  letter-spacing:1px;
 }
-.alp-changer{
-  border:1px solid #334155;
-  padding:14px;
-  border-radius:12px;
-  margin-top:18px;
-  background:linear-gradient(180deg,#020617,#020617dd);
+
+/* ================== TABLE ROW HOVER ================== */
+tr:hover td{
+  background:rgba(250,204,21,.08);
 }
+
+/* ================== TABLE-5 PLANET HEADING FIX ================== */
+table tr th[colspan]{
+  background:linear-gradient(180deg,#92400e,#1e293b);
+  color:var(--gold-main);
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:var(--glow-gold);
+  border-bottom:2px solid var(--gold-main);
+}
+
+/* ================== ALP CHANGER (RESTORED) ================== */
 .alp-changer-row{
   display:flex;
   align-items:center;
@@ -76,31 +137,185 @@ th{
   flex-wrap:wrap;
   margin-bottom:10px;
 }
+
+.alp-label{
+  font-size:17px;
+  font-weight:800;
+  color:var(--gold-main);
+  min-width:260px;
+}
+
+.alp-dates{
+  font-size:13px;
+  color:var(--text-dim);
+}
+
+/* ================== ALP BUTTONS ================== */
 .alp-btn{
   font-size:20px;
   padding:8px 18px;
   border-radius:12px;
   font-weight:900;
+  background:linear-gradient(135deg,#92400e,#020617);
+  border:1px solid var(--border-gold);
+  color:var(--gold-main);
 }
-.alp-label{
-  font-size:17px;
-  font-weight:800;
-  color:#facc15;
-  min-width:260px;
+
+.alp-btn:hover{
+  box-shadow:var(--glow-gold);
 }
-.alp-dates{
-  font-size:13px;
-  color:#93c5fd;
+
+/* ================== CHECKBOX / RADIO ================== */
+input[type="checkbox"],
+input[type="radio"]{
+  accent-color:var(--gold-main);
 }
-.west-box{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  margin-left:10px;
-  font-size:13px;
-  color:#93c5fd;
+
+/* ================== SCROLLBAR ================== */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(#92400e,#facc15);
+  border-radius:10px;
 }
+
+
+
+
+
+/* =========================================================
+   FIX-1 : Subtitle size restore (exact as original)
+   ========================================================= */
+.subtitle-inline{
+  font-size:14px !important;
+  font-weight:500 !important;
+  opacity:.85 !important;
+  line-height:1.4;
+}
+
+
+
+
+
+
+/* =========================================================
+   TABLE-5 PLANET HEADERS
+   MATCHES COSMIC VEDIC GOLD THEME (NO EXTRA DARK)
+   ========================================================= */
+
+#table3-shell table tr:first-child th[colspan]{
+  /* SAME gold family as other tables */
+  background:
+    linear-gradient(
+      180deg,
+      #1e293b 0%,
+      #020617 100%
+    ) !important;
+
+  color:#facc15 !important;        /* same gold */
+  border-bottom:2px solid #a16207 !important;
+
+  /* Polished depth (not dark) */
+  box-shadow:
+    inset 0 1px 0 rgba(250,204,21,0.18),
+    inset 0 -1px 0 rgba(2,6,23,0.9),
+    0 6px 18px rgba(0,0,0,0.6) !important;
+
+  /* Typography harmony */
+  font-size:20px !important;
+  font-weight:900 !important;
+  letter-spacing:2px;
+  text-shadow:
+    0 1px 0 #020617,
+    0 0 8px rgba(250,204,21,0.35) !important;
+}
+
+/* Keep planet tables visually aligned with rest */
+#table3-shell table{
+  background:linear-gradient(180deg,#020617,#020617cc);
+  border:1px solid #334155;
+}
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   COSMIC VEDIC GOLD – SCROLLBAR FIX
+   Matches full theme (no white strip)
+   ========================================================= */
+
+/* ===== Chrome / Edge / Brave / Opera ===== */
+::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#020617;              /* same as body */
+  border-left:1px solid #334155;   /* subtle separation */
+}
+
+::-webkit-scrollbar-thumb{
+  background:
+    linear-gradient(
+      180deg,
+      #92400e 0%,
+      #facc15 50%,
+      #92400e 100%
+    );
+  border-radius:10px;
+  border:2px solid #020617;        /* embeds thumb into theme */
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:
+    linear-gradient(
+      180deg,
+      #a16207 0%,
+      #fde047 50%,
+      #a16207 100%
+    );
+}
+
+/* ===== Firefox ===== */
+*{
+  scrollbar-width: thin;
+  scrollbar-color: #facc15 #020617;
+}
+
+
+
+
+
+
+
+
+
+
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 
 <body>
@@ -109,6 +324,9 @@ th{
   Akshaya Lagna Paddathi
   <span class="subtitle-inline">ALP Lagna progresses with time · Planets remain fixed</span>
 </h1>
+
+
+
 
 <div class="panel">
   <div class="row">
@@ -134,15 +352,24 @@ th{
     <button id="prevBtn">◀</button>
     <button id="nextBtn">▶</button>
 
-    <label><input type="radio" name="houseSystem" value="Vedic" checked> Vedic</label>
-    <label><input type="radio" name="houseSystem" value="KP"> KP</label>
+    <label><input type="radio" name="houseSystem" value="Vedic"> Vedic</label>
+    <label><input type="radio" name="houseSystem" value="KP" checked> KP</label>
 
     <label class="west-box">
       <input type="checkbox" id="westAspectToggle">
       West Asp (−180°)
     </label>
+	
+	<label class="west-box">
+	  <input type="checkbox" id="signOnlyBhavaToggle">
+	  Sign2Sign
+	</label>
+	
   </div>
 </div>
+
+	
+
 
 <div class="panel">
   <div class="row">
@@ -152,6 +379,23 @@ th{
     <select id="birthMin"></select>
   </div>
 </div>
+
+
+
+<h2 style="
+  margin-top:20px;
+  margin-bottom:12px;
+  text-align:center;
+  color:#facc15;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-shadow:0 0 10px #92400e;
+">
+TABLE-1 : DATA INPUT TABLE
+</h2>
+
+
+
 
 <table>
 <thead>
@@ -169,6 +413,221 @@ th{
 <tbody id="tableBody"></tbody>
 </table>
 
+
+<div class="panel">
+  <button id="clearBtn">Clear All</button>
+  <button id="saveBtn">Save Chart</button>
+  <button id="loadBtn">Load Chart</button>
+  <input type="file" id="fileInput" accept=".json" hidden>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     TABLE-2 : PLANET → BIRTH NAKSHATRA FROM ALP (EXTENDED)
+     ========================================================= -->
+
+<h2 style="
+  margin-top:30px;
+  margin-bottom:12px;
+  text-align:center;
+  color:#86efac;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-shadow:0 0 10px #064e3b;
+">
+TABLE-2 : PLANET BIRTH NAKSHATRA → ALP LINK
+</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Planet</th>
+  <th>From ALP (Planet)</th>
+  <th>Planets Lords</th>
+  <th>Its Original Nakshatra</th>
+  <th>Its Nakshatra Lord</th>
+  <th>From ALP</th>
+  <th>Lords of ALP</th>
+</tr>
+</thead>
+<tbody id="table2Body"></tbody>
+</table>
+
+<script>
+/* =========================================================
+   TABLE-2 LOGIC (KP / VEDIC AWARE – FINAL)
+   ========================================================= */
+
+function buildTable2(){
+
+  const body = document.getElementById("table2Body");
+  if(!body) return;
+
+  body.innerHTML = "";
+
+  const ORDER = [
+    "Surya","Chandra","Mangala",
+    "Rahu","Guru","Shani",
+    "Budha","Ketu","Shukra"
+  ];
+
+  const NAK_SIZE  = 360 / 27;
+  const PADA_SIZE = 360 / 108;
+
+  ORDER.forEach(p=>{
+
+    if(!data[p]?.sign) return;
+
+    /* =====================================================
+       ABS DEG : THIS PLANET (FIRST COLUMN REFERENCE)
+       ===================================================== */
+    let planetAbs = absDeg(
+      data[p].sign,
+      +data[p].deg,
+      +data[p].min,
+      +data[p].sec
+    );
+
+    /* KP RULE : KETU ALWAYS OPPOSITE RAHU */
+    if(p === "Ketu" && data["Rahu"]?.sign){
+      const rAbs = absDeg(
+        data["Rahu"].sign,
+        +data["Rahu"].deg,
+        +data["Rahu"].min,
+        +data["Rahu"].sec
+      );
+      planetAbs = (rAbs + 180) % 360;
+    }
+
+    /* =====================================================
+       FROM ALP (PLANET ITSELF — KP / VEDIC)
+       ===================================================== */
+    const fromALP_Planet = getHouseFromALP(planetAbs);
+
+    /* =====================================================
+       PLANET LORDS (MATCHING CURRENT ALP)
+       ===================================================== */
+    const planetLords =
+      getLordsOfPlanetFromALP(p).join(",");
+
+    /* =====================================================
+       ORIGINAL BIRTH NAKSHATRA
+       ===================================================== */
+    const nakIndex = Math.floor(planetAbs / NAK_SIZE);
+    const pada     = Math.floor((planetAbs % NAK_SIZE) / PADA_SIZE) + 1;
+
+    const nakName  = NAKSHATRAS[nakIndex][0];
+    const starLord = LORD_MAP[NAKSHATRAS[nakIndex][1]];
+
+    /* =====================================================
+       FROM ALP (NAKSHATRA LORD — KP / VEDIC)
+       ===================================================== */
+    let fromALP_Star = "";
+
+    if(starLord && data[starLord]?.sign){
+
+      let lordAbs = absDeg(
+        data[starLord].sign,
+        +data[starLord].deg,
+        +data[starLord].min,
+        +data[starLord].sec
+      );
+
+      if(starLord === "Ketu" && data["Rahu"]?.sign){
+        const rAbs = absDeg(
+          data["Rahu"].sign,
+          +data["Rahu"].deg,
+          +data["Rahu"].min,
+          +data["Rahu"].sec
+        );
+        lordAbs = (rAbs + 180) % 360;
+      }
+
+      fromALP_Star = getHouseFromALP(lordAbs);
+    }
+
+    /* =====================================================
+       LORDS OF ALP (UNCHANGED CORE LOGIC)
+       ===================================================== */
+    const lordsOfALP =
+      starLord ? getLordsOfPlanetFromALP(starLord).join(",") : "";
+
+    /* =====================================================
+       OUTPUT ROW
+       ===================================================== */
+    body.innerHTML += `
+      <tr>
+        <td>${p}</td>
+        <td>${fromALP_Planet}</td>
+        <td>${planetLords}</td>
+        <td>${nakName} – Pada ${pada}</td>
+        <td>${starLord}</td>
+        <td>${fromALP_Star}</td>
+        <td>${lordsOfALP}</td>
+      </tr>
+    `;
+  });
+}
+
+/* =====================================================
+   SAFE AUTO REFRESH (KP / VEDIC TOGGLE AWARE)
+   ===================================================== */
+if(!window.__TABLE2_FINAL_KP_VEDIC__){
+  window.__TABLE2_FINAL_KP_VEDIC__ = true;
+  const _origRecalc = recalc;
+  recalc = function(){
+    _origRecalc();
+    buildTable2();
+  };
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 style="
+  margin-top:30px;
+  margin-bottom:12px;
+  text-align:center;
+  color:#93c5fd;
+  font-weight:900;
+  letter-spacing:1.5px;
+">
+TABLE-3 : ALP NAKSHATRA & BHAVA ANALYSIS
+</h2>
+
+
+
 <table>
 <thead>
 <tr>
@@ -177,17 +636,20 @@ th{
   <th>Nakshatra Lord</th>
   <th>House from ALP</th>
   <th>Lords of ALP</th>
+  <th>From Its Bhava</th>
 </tr>
 </thead>
 <tbody id="alpNakshatraBody"></tbody>
 </table>
 
-<div class="panel">
-  <button id="clearBtn">Clear All</button>
-  <button id="saveBtn">Save Chart</button>
-  <button id="loadBtn">Load Chart</button>
-  <input type="file" id="fileInput" accept=".json" hidden>
-</div>
+
+
+
+
+
+
+
+
 
 <div class="alp-changer">
   <div class="alp-changer-row">
@@ -210,6 +672,58 @@ th{
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     TABLE-4 : KUNDALI LORDS FROM ALP (DARKER VARIANT)
+     ========================================================= -->
+
+<h2 style="
+  margin-top:40px;
+  margin-bottom:14px;
+  text-align:center;
+  color:#7dd3fc;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 12px #0f172a;
+">
+TABLE-4 : KUNDALI LORDS FROM ALP
+</h2>
+
+<table style="
+  background:linear-gradient(180deg,#020617,#020617cc);
+  border:1px solid #1e293b;
+">
+<thead>
+<tr>
+  <th>House</th>
+  <th>Zodiac Sign</th>
+  <th>Sign Lord</th>
+  <th>Lords of ALP</th>
+  <th>From ALP</th>
+  <th>From Its Bhava</th>
+</tr>
+</thead>
+<tbody id="kundaliTable3Body"></tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
 const EPS=1e-9;
@@ -269,6 +783,33 @@ function computeALPAbs(){
   return (birthAbs + days*ALP_SPEED + 360)%360;
 }
 </script>
+
+
+
+
+
+
+
+<script>
+/* =========================================================
+   SIGN-TO-SIGN BHAVA (IGNORE DEGREE MODE)
+   ========================================================= */
+function getSignToSignBhava(fromSign, toSign){
+  if(!fromSign || !toSign) return "";
+  const f = SIGNS.indexOf(fromSign);
+  const t = SIGNS.indexOf(toSign);
+  if(f < 0 || t < 0) return "";
+  return ((t - f + 12) % 12) + 1;
+}
+</script>
+
+
+
+
+
+
+
+
 
 <!-- ================== PART 2 ================== -->
 
@@ -382,48 +923,68 @@ function recalc(){
   diff_ALP.textContent=diffBirth.toFixed(2)+"°";
   aspect_ALP.textContent=getAspect(diffBirth);
 
-  const hs=document.querySelector('input[name="houseSystem"]:checked').value;
-  const westAsp=document.getElementById("westAspectToggle").checked;
-
-  PLANETS.forEach(p=>{
-    if(p==="ALP"||!data[p].sign)return;
-
-		let pAbs = absDeg(
-	  data[p].sign,
-	  +data[p].deg,
-	  +data[p].min,
-	  +data[p].sec
-	);
 
 
-    /* FORCE RAHU–KETU OPPOSITION INTERNALLY */
-    if(p==="Ketu" && data["Rahu"].sign){
-		  const rAbs = absDeg(
-		  data["Rahu"].sign,
-		  +data["Rahu"].deg,
-		  +data["Rahu"].min,
-		  +data["Rahu"].sec
-		);
 
-      pAbs=(rAbs+180)%360;
-    }
 
-    /* RAW DIFF = ALWAYS USED FOR HOUSE */
-    const rawDiff=(pAbs-alpAbs+360)%360;
+const hs = document.querySelector(
+  'input[name="houseSystem"]:checked'
+)?.value === "KP" ? "KP" : "VEDIC";
 
-    let house=(hs==="KP")?Math.floor(rawDiff/30)+1:Math.floor((rawDiff+15)/30)+1;
-    if(house>12)house-=12;
-    document.getElementById("house_"+p).textContent=house;
+const westAsp=document.getElementById("westAspectToggle").checked;
 
-    /* DISPLAY DIFF ONLY */
-    let showDiff=rawDiff;
-    if(westAsp && showDiff>181 && showDiff<=359){
-      showDiff=Math.abs(showDiff-180);
-    }
+PLANETS.forEach(p=>{
+  if(p==="ALP"||!data[p].sign)return;
 
-    document.getElementById("diff_"+p).textContent=showDiff.toFixed(2)+"°";
-    document.getElementById("aspect_"+p).textContent=getAspect(showDiff);
-  });
+  let pAbs = absDeg(
+    data[p].sign,
+    +data[p].deg,
+    +data[p].min,
+    +data[p].sec
+  );
+
+  /* FORCE RAHU–KETU OPPOSITION */
+  if(p==="Ketu" && data["Rahu"].sign){
+    const rAbs = absDeg(
+      data["Rahu"].sign,
+      +data["Rahu"].deg,
+      +data["Rahu"].min,
+      +data["Rahu"].sec
+    );
+    pAbs = (rAbs + 180) % 360;
+  }
+
+  /* PURE ANGULAR DISTANCE (DO NOT TOUCH) */
+  const rawDiff = (pAbs - alpAbs + 360) % 360;
+
+  /* ✅ CORRECT KP / VEDIC HOUSE LOGIC */
+  let house;
+  if(hs === "KP"){
+    house = Math.floor(rawDiff / 30) + 1;
+  }else{
+    house = Math.floor((rawDiff + 15) / 30) + 1;
+  }
+
+  if(house > 12) house -= 12;
+
+  document.getElementById("house_"+p).textContent = house;
+
+  /* DISPLAY DEGREE DIFF ONLY */
+  let showDiff = rawDiff;
+  if(westAsp && showDiff > 181 && showDiff <= 359){
+    showDiff = Math.abs(showDiff - 180);
+  }
+
+  document.getElementById("diff_"+p).textContent = showDiff.toFixed(2)+"°";
+  document.getElementById("aspect_"+p).textContent = getAspect(showDiff);
+});
+
+
+
+
+
+
+
 
   buildALPNakshatraTable(alpAbs);
 }
@@ -517,7 +1078,31 @@ function buildALPNakshatraTable(alpAbs){
     const lord = LORD_MAP[NAKSHATRAS[nIndex][1]];
 
     const lordHouseCell = document.getElementById("house_"+lord);
-    const placedHouse  = lordHouseCell ? lordHouseCell.textContent : "";
+	const placedHouse  = lordHouseCell ? Number(lordHouseCell.textContent) : 0;
+
+/* ================= FROM ITS BHAVA (INCLUSIVE KP COUNT) ================= */
+
+
+let fromItsBhava = "";
+
+const signOnly =
+  document.getElementById("signOnlyBhavaToggle")?.checked;
+
+if(placedHouse){
+
+  if(signOnly){
+    /* SIGN-TO-SIGN ONLY (IGNORE DEGREE) */
+    const targetSign = data[lord]?.sign;
+    const baseSign   = SIGNS[(getSignIndex(alpAbs) + h - 1) % 12];
+    fromItsBhava = getSignToSignBhava(baseSign, targetSign);
+
+  }else{
+    /* DEGREE / KP LOGIC (EXISTING) */
+    fromItsBhava = ((placedHouse - h + 12) % 12) + 1;
+  }
+}
+
+
 
     /* 🔥 ALAS LORDSHIP FROM PART 4.1 */
     const lordsOf = getLordsOfPlanetFromALP(lord).join(",");
@@ -529,6 +1114,7 @@ function buildALPNakshatraTable(alpAbs){
         <td>${lord}</td>
         <td>${placedHouse}</td>
         <td>${lordsOf}</td>
+		<td>${fromItsBhava}</td>
       </tr>
     `;
   }
@@ -767,9 +1353,372 @@ function getLordsOfPlanetFromALP(planet){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/* =========================================================
+   TABLE-3 : KUNDALI LORDS FROM ALP
+   FIXED : FROM ALP = LORD → ALP DISTANCE
+   SAME LOGIC AS TABLE-1 (KP / VEDIC)
+   ========================================================= */
+
+const SIGN_LORD_SIMPLE = {
+  Aries:"Mangala", Taurus:"Shukra", Gemini:"Budha", Cancer:"Chandra",
+  Leo:"Surya", Virgo:"Budha", Libra:"Shukra", Scorpio:"Mangala",
+  Sagittarius:"Guru", Capricorn:"Shani", Aquarius:"Shani", Pisces:"Guru"
+};
+
+function getHouseFromALP(abs){
+  const alpAbs = computeALPAbs();
+  const rawDiff = (abs - alpAbs + 360) % 360;
+
+  const hs = document.querySelector(
+    'input[name="houseSystem"]:checked'
+  )?.value || "KP";
+
+  let house;
+  if(hs === "KP"){
+    house = Math.floor(rawDiff / 30) + 1;
+  }else{
+    house = Math.floor((rawDiff + 15) / 30) + 1;
+  }
+
+  if(house > 12) house -= 12;
+  return house;
+}
+
+function buildKundaliLordsTable3(){
+
+  const body = document.getElementById("kundaliTable3Body");
+  if(!body || !birthSign.value || birthDeg.value==="") return;
+
+  body.innerHTML = "";
+
+  const alpAbs = computeALPAbs();
+  const alpSignIndex = getSignIndex(alpAbs);
+
+  for(let h=1; h<=12; h++){
+
+    /* ---------- ZODIAC SIGN ROTATION FROM ALP ---------- */
+    const sign = SIGNS[(alpSignIndex + h - 1) % 12];
+    const signLord = SIGN_LORD_SIMPLE[sign];
+
+    /* ---------- LORDS OF ALP ---------- */
+    const lordsOfALP = getLordsOfPlanetFromALP(signLord).join(",");
+
+    /* ---------- SIGN LORD ABS DEG ---------- */
+    let lordAbs = null;
+
+    if(data[signLord]?.sign){
+      lordAbs = absDeg(
+        data[signLord].sign,
+        +data[signLord].deg,
+        +data[signLord].min,
+        +data[signLord].sec
+      );
+    }
+
+    /* ---------- RAHU / KETU → DISPOSITOR ONLY ---------- */
+    if((signLord==="Rahu" || signLord==="Ketu") && data[signLord]?.sign){
+      const disp = SIGN_LORD_SIMPLE[data[signLord].sign];
+      if(data[disp]?.sign){
+        lordAbs = absDeg(
+          data[disp].sign,
+          +data[disp].deg,
+          +data[disp].min,
+          +data[disp].sec
+        );
+      }
+    }
+
+    /* ---------- FROM ALP (CORRECT & TOGGLE AWARE) ---------- */
+    const fromALP = lordAbs ? getHouseFromALP(lordAbs) : "";
+
+    /* ---------- FROM ITS BHAVA (UNCHANGED) ---------- */
+			let fromItsBhava = "";
+
+		const signOnly =
+		  document.getElementById("signOnlyBhavaToggle")?.checked;
+
+		if(fromALP){
+
+		  if(signOnly){
+			/* SIGN-TO-SIGN ONLY */
+			const targetSign = data[signLord]?.sign;
+			const baseSign   = sign;
+			fromItsBhava = getSignToSignBhava(baseSign, targetSign);
+
+		  }else{
+			/* DEGREE / KP LOGIC */
+			fromItsBhava = ((fromALP - h + 12) % 12) + 1;
+		  }
+		}
+
+
+    body.innerHTML += `
+      <tr>
+        <td>${h}</td>
+        <td>${sign}</td>
+        <td>${signLord}</td>
+        <td>${lordsOfALP}</td>
+        <td>${fromALP}</td>
+        <td>${fromItsBhava}</td>
+      </tr>
+    `;
+  }
+}
+
+/* =========================================================
+   SAFE AUTO-HOOK (NO BREAKING)
+   ========================================================= */
+if(!window.__T3_KUNDALI_FINAL_FIXED__){
+  window.__T3_KUNDALI_FINAL_FIXED__ = true;
+  const _origRecalc = recalc;
+  recalc = function(){
+    _origRecalc();
+    buildKundaliLordsTable3();
+  };
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- =========================================================
-     PART 5 : TABLE-3 (PLANET ENTITY BOXES – FINAL STABLE)
+     TABLE-4B : RAHU & KETU FROM ALP (FINAL)
      ========================================================= -->
+
+<div style="height:18px;"></div>
+
+<h2 style="
+  margin-top:10px;
+  margin-bottom:12px;
+  text-align:center;
+  color:#fda4af;
+  font-weight:900;
+  letter-spacing:1.8px;
+  text-shadow:0 0 10px #450a0a;
+">
+TABLE-4B : RAHU & KETU FROM ALP
+</h2>
+
+<table style="
+  background:linear-gradient(180deg,#020617,#020617cc);
+  border:1px solid #3f1d1d;
+">
+<thead>
+<tr>
+  <th>Planet</th>
+  <th>Zodiac Sign</th>
+  <th>Dispositor</th>
+  <th>Lords of ALP</th>
+  <th>From ALP</th>
+</tr>
+</thead>
+<tbody id="rahuketuTableBody"></tbody>
+</table>
+
+<script>
+/* =========================================================
+   TABLE-3B : RAHU & KETU (ALP PIVOT BASED – COMPLETE)
+   ========================================================= */
+
+/* --- SAME HOUSE LOGIC AS TABLE-1 (KP / VEDIC) --- */
+function getHouseFromALP_RK(abs){
+  const alpAbs = computeALPAbs();
+  const rawDiff = (abs - alpAbs + 360) % 360;
+
+  const hs = document.querySelector(
+    'input[name="houseSystem"]:checked'
+  )?.value || "KP";
+
+  let house;
+  if(hs === "KP"){
+    house = Math.floor(rawDiff / 30) + 1;
+  }else{
+    house = Math.floor((rawDiff + 15) / 30) + 1;
+  }
+
+  if(house > 12) house -= 12;
+  return house;
+}
+
+/* --- BUILD TABLE-3B --- */
+function buildRahuKetuTable(){
+
+  const body = document.getElementById("rahuketuTableBody");
+  if(!body) return;
+
+  body.innerHTML = "";
+
+  ["Rahu","Ketu"].forEach(node=>{
+
+    if(!data[node]?.sign) return;
+
+    const zodiacSign = data[node].sign;
+    const dispositor = SIGN_LORD_SIMPLE[zodiacSign] || "";
+
+    /* --- Absolute position of node --- */
+    let nodeAbs = absDeg(
+      data[node].sign,
+      +data[node].deg,
+      +data[node].min,
+      +data[node].sec
+    );
+
+    /* --- KP RULE : Ketu always opposite Rahu --- */
+    if(node === "Ketu" && data["Rahu"]?.sign){
+      const rAbs = absDeg(
+        data["Rahu"].sign,
+        +data["Rahu"].deg,
+        +data["Rahu"].min,
+        +data["Rahu"].sec
+      );
+      nodeAbs = (rAbs + 180) % 360;
+    }
+
+    /* --- FROM ALP (DIRECT NODE → ALP DISTANCE) --- */
+    const fromALP = getHouseFromALP_RK(nodeAbs);
+
+    /* --- LORDS OF ALP (EXISTING LOGIC) --- */
+    const lordsOfALP = getLordsOfPlanetFromALP(node).join(",");
+
+    body.innerHTML += `
+      <tr>
+        <td>${node}</td>
+        <td>${zodiacSign}</td>
+        <td>${dispositor}</td>
+        <td>${lordsOfALP}</td>
+        <td>${fromALP}</td>
+      </tr>
+    `;
+  });
+}
+
+
+
+
+/* =========================================================
+   FINAL GLOBAL HOOK — RAHU / KETU TABLE REFRESH
+   ========================================================= */
+if(!window.__FINAL_RAHU_KETU_REFRESH__){
+  window.__FINAL_RAHU_KETU_REFRESH__ = true;
+
+  const __finalRecalc = recalc;
+  recalc = function(){
+    __finalRecalc();
+    if(typeof buildRahuKetuTable === "function"){
+      buildRahuKetuTable();
+    }
+  };
+}
+</script>
+
+
+
+
+
+<script>
+/* =========================================================
+   HARD BIND : RAHU / KETU TABLE REFRESH ON KP / VEDIC TOGGLE
+   ========================================================= */
+
+document
+  .querySelectorAll('input[name="houseSystem"]')
+  .forEach(radio=>{
+    radio.addEventListener("change", ()=>{
+      if(typeof buildRahuKetuTable === "function"){
+        buildRahuKetuTable();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     PART 5 : TABLE-5 (PLANET ENTITY BOXES – FINAL STABLE)
+     ========================================================= -->
+
+<h2 style="
+  margin-top:40px;
+  margin-bottom:14px;
+  text-align:center;
+  color:#ff9f1c;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 12px #a86b17;
+">
+TABLE-5 : PLANET STAR–SUB LORD ANALYSIS (KP)
+</h2>
+
+
+
+
+
+
+
 
 <!-- ===== TABLE-3 SHELL ===== -->
 <div id="table3-shell" style="margin-top:40px;"></div>
@@ -961,9 +1910,11 @@ if(!window.__T3_HOOKED__){
   const _origRecalc = recalc;
   recalc = function(){
     _origRecalc();
+    buildTable2();   // 🔥 ADD THIS LINE
     buildTable3();
   };
 }
+
 </script>
 
 
@@ -975,6 +1926,19 @@ if(!window.__T3_HOOKED__){
 
 
 
+
+
+
+<script>
+/* =========================================================
+   SIGN-TO-SIGN TOGGLE → AUTO REFRESH
+   ========================================================= */
+document
+  .getElementById("signOnlyBhavaToggle")
+  ?.addEventListener("change", ()=>{
+    if(typeof recalc === "function") recalc();
+  });
+</script>
 
 
 
