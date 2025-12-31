@@ -1,0 +1,62 @@
+{
+  "dob": "2000-05-24",
+  "transit": "2025-12-24",
+  "birth": {
+    "sign": "Taurus",
+    "deg": "14",
+    "min": "0"
+  },
+  "data": {
+    "ALP": {
+      "sign": "",
+      "deg": 0,
+      "min": 0
+    },
+    "Surya": {
+      "sign": "Taurus",
+      "deg": "9",
+      "min": 0
+    },
+    "Chandra": {
+      "sign": "Capricorn",
+      "deg": 0,
+      "min": 0
+    },
+    "Mangala": {
+      "sign": "Taurus",
+      "deg": "20",
+      "min": 0
+    },
+    "Budha": {
+      "sign": "Taurus",
+      "deg": "25",
+      "min": 0
+    },
+    "Guru": {
+      "sign": "Aries",
+      "deg": "27",
+      "min": 0
+    },
+    "Shukra": {
+      "sign": "Taurus",
+      "deg": "4",
+      "min": 0
+    },
+    "Shani": {
+      "sign": "Aries",
+      "deg": "28",
+      "min": 0
+    },
+    "Rahu": {
+      "sign": "Cancer",
+      "deg": "3",
+      "min": 0
+    },
+    "Ketu": {
+      "sign": "Capricorn",
+      "deg": "3",
+      "min": 0
+    }
+  },
+  "manualALPAbs": null
+}

@@ -1,0 +1,72 @@
+{
+  "dob": "1998-04-17",
+  "transit": "2025-12-23",
+  "birth": {
+    "sign": "Libra",
+    "deg": "25",
+    "min": "31"
+  },
+  "data": {
+    "ALP": {
+      "sign": "",
+      "deg": 0,
+      "min": 0,
+      "sec": 0
+    },
+    "Surya": {
+      "sign": "Aries",
+      "deg": "3",
+      "min": 0,
+      "sec": 0
+    },
+    "Chandra": {
+      "sign": "Sagittarius",
+      "deg": "7",
+      "min": 0,
+      "sec": 0
+    },
+    "Mangala": {
+      "sign": "Aries",
+      "deg": "9",
+      "min": 0,
+      "sec": 0
+    },
+    "Rahu": {
+      "sign": "Leo",
+      "deg": "14",
+      "min": 0,
+      "sec": 0
+    },
+    "Guru": {
+      "sign": "Aquarius",
+      "deg": "23",
+      "min": 0,
+      "sec": 0
+    },
+    "Shani": {
+      "sign": "Aries",
+      "deg": "0",
+      "min": "2",
+      "sec": "39"
+    },
+    "Budha": {
+      "sign": "Pisces",
+      "deg": "16",
+      "min": 0,
+      "sec": 0
+    },
+    "Ketu": {
+      "sign": "Aquarius",
+      "deg": "14",
+      "min": 0,
+      "sec": 0
+    },
+    "Shukra": {
+      "sign": "Aquarius",
+      "deg": "18",
+      "min": 0,
+      "sec": 0
+    }
+  },
+  "manualALPAbs": 298.33333333333337
+}

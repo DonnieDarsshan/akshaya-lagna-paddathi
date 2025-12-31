@@ -1,0 +1,72 @@
+{
+  "dob": "1993-02-22",
+  "transit": "2025-12-29",
+  "birth": {
+    "sign": "Gemini",
+    "deg": "24",
+    "min": "0"
+  },
+  "data": {
+    "ALP": {
+      "sign": "Libra",
+      "deg": 2,
+      "min": 34,
+      "sec": 0
+    },
+    "Surya": {
+      "sign": "Aquarius",
+      "deg": 10,
+      "min": "1",
+      "sec": "18"
+    },
+    "Chandra": {
+      "sign": "Aquarius",
+      "deg": "19",
+      "min": "18",
+      "sec": "58"
+    },
+    "Mangala": {
+      "sign": "Gemini",
+      "deg": 15,
+      "min": "12",
+      "sec": "45"
+    },
+    "Rahu": {
+      "sign": "Scorpio",
+      "deg": "23",
+      "min": "53",
+      "sec": "4"
+    },
+    "Guru": {
+      "sign": "Virgo",
+      "deg": "19",
+      "min": "59",
+      "sec": "53"
+    },
+    "Shani": {
+      "sign": "Capricorn",
+      "deg": 28,
+      "min": "42",
+      "sec": "1"
+    },
+    "Budha": {
+      "sign": "Aquarius",
+      "deg": "28",
+      "min": 0,
+      "sec": "38"
+    },
+    "Ketu": {
+      "sign": "Taurus",
+      "deg": "23",
+      "min": "53",
+      "sec": "4"
+    },
+    "Shukra": {
+      "sign": "Pisces",
+      "deg": 21,
+      "min": "5",
+      "sec": "37"
+    }
+  },
+  "manualALPAbs": null
+}
