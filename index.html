@@ -534,29 +534,31 @@ function buildTable2(){
     /* =====================================================
        FROM ALP (NAKSHATRA LORD — KP / VEDIC)
        ===================================================== */
-    let fromALP_Star = "";
+   let fromALP_Star = "";
 
-    if(starLord && data[starLord]?.sign){
+if(starLord && data[starLord]?.sign){
 
-      let lordAbs = absDeg(
-        data[starLord].sign,
-        +data[starLord].deg,
-        +data[starLord].min,
-        +data[starLord].sec
-      );
+  let lordAbs = absDeg(
+    data[starLord].sign,
+    +data[starLord].deg,
+    +data[starLord].min,
+    +data[starLord].sec
+  );
 
-      if(starLord === "Ketu" && data["Rahu"]?.sign){
-        const rAbs = absDeg(
-          data["Rahu"].sign,
-          +data["Rahu"].deg,
-          +data["Rahu"].min,
-          +data["Rahu"].sec
-        );
-        lordAbs = (rAbs + 180) % 360;
-      }
+  if(starLord === "Ketu" && data["Rahu"]?.sign){
+    const rAbs = absDeg(
+      data["Rahu"].sign,
+      +data["Rahu"].deg,
+      +data["Rahu"].min,
+      +data["Rahu"].sec
+    );
+    lordAbs = (rAbs + 180) % 360;
+  }
 
-      fromALP_Star = getHouseFromALP(lordAbs);
-    }
+  /* 🔥 ALWAYS USE LIVE KP / VEDIC LOGIC */
+  fromALP_Star = getHouseFromALP(lordAbs);
+}
+
 
     /* =====================================================
        LORDS OF ALP (UNCHANGED CORE LOGIC)
@@ -1469,17 +1471,16 @@ function buildKundaliLordsTable3(){
 
 		if(fromALP){
 
-		  if(signOnly){
-			/* SIGN-TO-SIGN ONLY */
+		  if(document.getElementById("signOnlyBhavaToggle")?.checked){
 			const targetSign = data[signLord]?.sign;
 			const baseSign   = sign;
 			fromItsBhava = getSignToSignBhava(baseSign, targetSign);
-
 		  }else{
-			/* DEGREE / KP LOGIC */
+			/* 🔥 KP / VEDIC AWARE */
 			fromItsBhava = ((fromALP - h + 12) % 12) + 1;
 		  }
 		}
+
 
 
     body.innerHTML += `
@@ -1695,6 +1696,35 @@ document
 
 
 
+<div style="text-align:center;margin-bottom:16px;">
+  <label style="font-weight:800;color:#facc15;margin-right:10px;">
+    Sort Planet :
+  </label>
+  <select id="table5SortPlanet"
+          style="padding:6px 14px;border-radius:8px;font-weight:800;">
+    <option value="">Default Order</option>
+    <option>Surya</option>
+    <option>Chandra</option>
+    <option>Mangala</option>
+    <option>Rahu</option>
+    <option>Guru</option>
+    <option>Shani</option>
+    <option>Budha</option>
+    <option>Ketu</option>
+    <option>Shukra</option>
+  </select>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- =========================================================
@@ -1854,7 +1884,31 @@ function buildPlanetBoxT3(planet){
     if(!r.p) return;
 
     const lords   = getLordsOfPlanetFromALP(r.p);
-    const placed  = Number(document.getElementById("house_"+r.p)?.textContent || 0);
+			let placed = 0;
+
+		if(data[r.p]?.sign){
+		  let abs = absDeg(
+			data[r.p].sign,
+			+data[r.p].deg,
+			+data[r.p].min,
+			+data[r.p].sec
+		  );
+
+		  if(r.p === "Ketu" && data["Rahu"]?.sign){
+			const rAbs = absDeg(
+			  data["Rahu"].sign,
+			  +data["Rahu"].deg,
+			  +data["Rahu"].min,
+			  +data["Rahu"].sec
+			);
+			abs = (rAbs + 180) % 360;
+		  }
+
+		  /* 🔥 LIVE KP / VEDIC */
+		  placed = getHouseFromALP(abs);
+		}
+
+
     const finalV  = [...new Set([...lords, placed].filter(Boolean))].sort((a,b)=>a-b);
     const aspects = getAspectHousesT3(r.p, placed);
     const sum     = [...new Set([...finalV, ...aspects])].sort((a,b)=>a-b);
@@ -1885,22 +1939,33 @@ function buildTable3(){
 
   shell.innerHTML = "";
 
-  const order = [
-    "Surya",
-    "Chandra",
-    "Mangala",
-    "Rahu",
-    "Guru",
-    "Shani",
-    "Budha",
-    "Ketu",
-    "Shukra"
-  ];
+	  const defaultOrder = [
+	  "Surya","Chandra","Mangala","Rahu",
+	  "Guru","Shani","Budha","Ketu","Shukra"
+	];
 
-  order.forEach(p=>{
-    shell.innerHTML += buildPlanetBoxT3(p);
-  });
+	const sel = document.getElementById("table5SortPlanet");
+	const selected = sel && sel.value ? sel.value : "";
+
+	let order = [...defaultOrder];
+
+		if(selected && order.includes(selected)){
+		  const idx = order.indexOf(selected);
+
+		  /* 🔥 ROTATE ORDER (NOT SORT) */
+		  order = order.slice(idx).concat(order.slice(0, idx));
+		}
+
+
+	order.forEach(p=>{
+	  shell.innerHTML += buildPlanetBoxT3(p);
+	});
+
 }
+
+
+
+
 
 /* =========================================================
    PART 5.5 : SAFE AUTO-HOOK (NO DOUBLE REWRAP)
@@ -1919,6 +1984,15 @@ if(!window.__T3_HOOKED__){
 
 
 
+<script>
+document
+  .getElementById("table5SortPlanet")
+  ?.addEventListener("change", ()=>{
+    if(typeof buildTable3 === "function"){
+      buildTable3();
+    }
+  });
+</script>
 
 
 
@@ -1942,6 +2016,25 @@ document
 
 
 
+
+
+<script>
+/* =========================================================
+   FIX-4 : HARD FORCE REFALC ON KP / VEDIC TOGGLE
+   (Ensures ALL tables recalc using LIVE house logic)
+   ========================================================= */
+
+document
+  .querySelectorAll('input[name="houseSystem"]')
+  .forEach(radio=>{
+    radio.addEventListener("change", ()=>{
+      if(typeof recalc === "function") recalc();
+      if(typeof buildTable2 === "function") buildTable2();
+      if(typeof buildKundaliLordsTable3 === "function") buildKundaliLordsTable3();
+      if(typeof buildTable3 === "function") buildTable3();
+    });
+  });
+</script>
 
 
 
