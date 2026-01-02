@@ -145,10 +145,49 @@ table tr th[colspan]{
   min-width:260px;
 }
 
-.alp-dates{
-  font-size:13px;
-  color:var(--text-dim);
+
+
+
+
+
+
+
+
+
+	.alp-dates{
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:0.9px;
+
+  color:#34d399; /* emerald green */
+
+  text-shadow:
+    0 0 6px rgba(52,211,153,0.55),
+    0 0 14px rgba(16,185,129,0.35);
+
+  padding:5px 12px;
+  border-radius:9px;
+
+  border:1px solid rgba(16,185,129,0.6);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(2,6,23,0.92),
+      rgba(2,6,23,0.72)
+    );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /* ================== ALP BUTTONS ================== */
 .alp-btn{
@@ -295,6 +334,43 @@ input[type="radio"]{
 
 
 
+/* =========================================================
+   PERSISTENT ROW HIGHLIGHT (CLICK TO TOGGLE)
+   ========================================================= */
+
+		/* Default clickable row cursor */
+		table tbody tr{
+		  cursor:pointer;
+		}
+
+		/* Persistent selected row */
+		tr.row-selected td{
+		  background:
+			linear-gradient(
+			  180deg,
+			  rgba(250,204,21,0.16),
+			  rgba(250,204,21,0.09)
+			) !important;
+
+		  border-color:rgba(250,204,21,0.55) !important;
+
+		  box-shadow:
+			inset 0 0 0 1px rgba(250,204,21,0.45),
+			inset 0 0 8px rgba(250,204,21,0.22);
+
+		  font-weight:700;
+		}
+
+		/* Optional: subtle glow on text */
+		tr.row-selected td{
+		  text-shadow:0 0 6px rgba(250,204,21,0.55);
+		}
+
+
+
+
+
+
 
 </style>
 
@@ -374,9 +450,25 @@ input[type="radio"]{
 <div class="panel">
   <div class="row">
     <b>Birth Lagna</b>
+
     <select id="birthSign"><option value="">Sign</option></select>
     <select id="birthDeg"><option value="">Deg</option></select>
     <select id="birthMin"></select>
+
+    <!-- CURRENT AGE DISPLAY -->
+    <div id="currentAgeBox"
+         style="
+           margin-left:14px;
+           padding:6px 14px;
+           border-radius:10px;
+           font-weight:800;
+           color:#34d399;
+           border:1px solid rgba(16,185,129,0.6);
+           background:linear-gradient(180deg,rgba(2,6,23,0.92),rgba(2,6,23,0.72));
+           text-shadow:0 0 6px rgba(52,211,153,0.55);
+         ">
+      Age : —
+    </div>
   </div>
 </div>
 
@@ -732,6 +824,27 @@ const EPS=1e-9;
 const ALP_SPEED=3/365;
 
 const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+
+/* =========================================================
+   RASI NAME MAP (ENGLISH → INDIAN)
+   ========================================================= */
+const RASI_DUAL = {
+  Aries: "Mesha",
+  Taurus: "Vrisaba",
+  Gemini: "Mithuna",
+  Cancer: "Kataka",
+  Leo: "Simha",
+  Virgo: "Kanya",
+  Libra: "Thula",
+  Scorpio: "Vrischika",
+  Sagittarius: "Dhanu",
+  Capricorn: "Makara",
+  Aquarius: "Kumbha",
+  Pisces: "Meena"
+};
+
+
+
 const PLANETS=[
   "ALP",
   "Surya",
@@ -785,6 +898,12 @@ function computeALPAbs(){
   return (birthAbs + days*ALP_SPEED + 360)%360;
 }
 </script>
+
+
+
+
+
+
 
 
 
@@ -1050,6 +1169,87 @@ nextBtn.onclick=()=>{
 
 
 
+<script>
+
+/* =========================================================
+   AGE CALCULATION FROM DOB (y m d)
+   ========================================================= */
+function getAgeFromDOB(targetDateStr){
+  if(!dob.value || !targetDateStr) return "";
+
+  const dobDate = new Date(dob.value);
+  const target  = new Date(targetDateStr);
+
+  let y = target.getFullYear() - dobDate.getFullYear();
+  let m = target.getMonth()  - dobDate.getMonth();
+  let d = target.getDate()   - dobDate.getDate();
+
+  if(d < 0){
+    m--;
+    const prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+    d += prevMonth.getDate();
+  }
+
+  if(m < 0){
+    y--;
+    m += 12;
+  }
+
+  return `${y} y ${m} m ${d} d`;
+}
+
+
+
+
+
+
+
+/* =========================================================
+   LIVE CURRENT AGE (DOB → TRANSIT DATE)
+   ========================================================= */
+function updateCurrentAge(){
+
+  const box = document.getElementById("currentAgeBox");
+  if(!box) return;
+
+  if(!dob.value || !transitDate.value){
+    box.textContent = "Age : —";
+    return;
+  }
+
+  const age = getAgeFromDOB(transitDate.value);
+
+  box.textContent = `Age : ${age.replace(" y"," years")
+                              .replace(" m"," months")
+                              .replace(" d"," days")}`;
+}
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- ================== PART 3 ================== -->
@@ -1144,7 +1344,9 @@ function updateALPControls(alpAbs){
   const a = norm360(alpAbs);
 
   const sIdx = Math.floor(a / 30);
-  alpSignLabel.textContent = SIGNS[sIdx];
+  alpSignLabel.textContent =
+  SIGNS[sIdx] + " – " + RASI_DUAL[SIGNS[sIdx]];
+
 
   const signStartAbs = sIdx * 30;
   const signEndAbs   = (sIdx + 1) * 30;
@@ -1984,6 +2186,16 @@ if(!window.__T3_HOOKED__){
 
 
 
+
+
+
+
+
+
+
+
+
+
 <script>
 document
   .getElementById("table5SortPlanet")
@@ -2035,6 +2247,327 @@ document
     });
   });
 </script>
+
+
+
+
+
+<script>
+/* =========================================================
+   PERSISTENT ROW HIGHLIGHT (SURVIVES ALL RECALC / NAVIGATION)
+   ========================================================= */
+
+/* Memory store (clears only on page close) */
+const __ROW_HIGHLIGHT_STORE__ = new Set();
+
+/* Build unique key for each row */
+function getRowKey(tr){
+  const table = tr.closest("table");
+  if(!table) return null;
+
+  const tableIndex =
+    Array.from(document.querySelectorAll("table")).indexOf(table);
+
+  const rowIndex =
+    Array.from(tr.parentNode.children).indexOf(tr);
+
+  return tableIndex + "::" + rowIndex;
+}
+
+/* Apply stored highlights */
+function applyStoredHighlights(){
+  document.querySelectorAll("table").forEach((table, tIdx)=>{
+    table.querySelectorAll("tbody tr").forEach((tr, rIdx)=>{
+      const key = tIdx + "::" + rIdx;
+      if(__ROW_HIGHLIGHT_STORE__.has(key)){
+        tr.classList.add("row-selected");
+      }
+    });
+  });
+}
+
+/* Click handler */
+document.addEventListener("click", function(e){
+
+  const tr = e.target.closest("tbody tr");
+  if(!tr) return;
+
+  const key = getRowKey(tr);
+  if(!key) return;
+
+  if(tr.classList.contains("row-selected")){
+    tr.classList.remove("row-selected");
+    __ROW_HIGHLIGHT_STORE__.delete(key);
+  }else{
+    tr.classList.add("row-selected");
+    __ROW_HIGHLIGHT_STORE__.add(key);
+  }
+});
+
+/* 🔥 HARD RE-APPLY after ANY table rebuild */
+const __origRecalc_global = recalc;
+recalc = function(){
+  __origRecalc_global();
+  applyStoredHighlights();
+};
+
+/* Initial safety */
+setTimeout(applyStoredHighlights, 100);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========================================================
+     TABLE-6 : RASI → RASI PRE CALCULATED DATES
+     ========================================================= -->
+
+<h2 style="
+  margin-top:40px;
+  margin-bottom:14px;
+  text-align:center;
+  color:#fde047;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 12px #92400e;
+">
+TABLE-6 : RASI → RASI DATES (ALP)
+</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Rasi</th>
+  <th>From</th>
+  <th>To</th>
+</tr>
+</thead>
+<tbody id="rasiDateBody"></tbody>
+</table>
+
+
+
+<!-- =========================================================
+     TABLE-7 : NAKSHATRA → PADA PRE CALCULATED DATES
+     ========================================================= -->
+
+<h2 style="
+  margin-top:40px;
+  margin-bottom:14px;
+  text-align:center;
+  color:#86efac;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 12px #064e3b;
+">
+TABLE-7 : NAKSHATRA → PADA DATES (ALP)
+</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Nakshatra</th>
+  <th>Pada 1</th>
+  <th>Pada 2</th>
+  <th>Pada 3</th>
+  <th>Pada 4</th>
+</tr>
+</thead>
+<tbody id="nakshatraPadaBody"></tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+/* =========================================================
+   TABLE-6 : RASI → RASI DATE CALCULATION
+   ========================================================= */
+
+
+function buildRasiDateTable(){
+
+  const body = document.getElementById("rasiDateBody");
+  if(!body || !dob.value || !birthSign.value) return;
+
+  body.innerHTML = "";
+
+  const birthAbs = absDeg(
+    birthSign.value,
+    +birthDeg.value,
+    +birthMin.value
+  );
+
+  const startSignIndex = Math.floor(birthAbs / 30);
+
+  for(let i=0;i<12;i++){
+
+    const signIndex = (startSignIndex + i) % 12;
+    const rasiName =
+      SIGNS[signIndex] + " – " + RASI_DUAL[SIGNS[signIndex]];
+
+    const fromAbs = signIndex * 30;
+    const toAbs   = fromAbs + 30;
+
+    const fromDate = alpAbsToDate(fromAbs);
+    const toDate   = alpAbsToDate(toAbs);
+
+    const fromAge = getAgeFromDOB(fromDate);
+    const toAge   = getAgeFromDOB(toDate);
+
+    body.innerHTML += `
+      <tr>
+        <td>${rasiName}</td>
+        <td>
+          From : ${fromDate}<br>
+          <span style="display:block;margin-top:4px;color:#fde047;">
+            From : ${fromAge}
+          </span>
+        </td>
+        <td>
+          To : ${toDate}<br>
+          <span style="display:block;margin-top:4px;color:#fde047;">
+            To : ${toAge}
+          </span>
+        </td>
+      </tr>
+    `;
+  }
+}
+</script>
+
+
+
+
+<script>
+/* =========================================================
+   TABLE-7 : NAKSHATRA → PADA DATE CALCULATION
+   ========================================================= */
+
+function buildNakshatraPadaTable(){
+
+  const body = document.getElementById("nakshatraPadaBody");
+  if(!body || !dob.value || !birthSign.value) return;
+
+  body.innerHTML = "";
+
+  const birthAbs = absDeg(
+    birthSign.value,
+    +birthDeg.value,
+    +birthMin.value
+  );
+
+  const NAK_SIZE  = 360 / 27;
+  const PADA_SIZE = 360 / 108;
+
+  const startNakIndex = Math.floor(birthAbs / NAK_SIZE);
+
+  for(let n=0;n<27;n++){
+
+    const nakIndex = (startNakIndex + n) % 27;
+    const nakName  = NAKSHATRAS[nakIndex][0];
+
+    let row = `<tr><td>${nakName}</td>`;
+
+    for(let p=0;p<4;p++){
+
+      const padaIndex = (nakIndex * 4) + p;
+      const padaStartAbs = padaIndex * PADA_SIZE;
+      const padaEndAbs   = padaStartAbs + PADA_SIZE;
+
+      const fromDate = alpAbsToDate(padaStartAbs);
+      const toDate   = alpAbsToDate(padaEndAbs);
+
+      const fromAge  = getAgeFromDOB(fromDate);
+      const toAge    = getAgeFromDOB(toDate);
+
+      row += `
+        <td>
+          From : ${fromDate}<br>
+          To : ${toDate}
+          <div style="height:6px;"></div>
+          <span style="color:#86efac;">
+            From : ${fromAge}<br>
+            To : ${toAge}
+          </span>
+        </td>
+      `;
+    }
+
+    row += `</tr>`;
+    body.innerHTML += row;
+  }
+}
+
+
+
+/* =========================================================
+   AUTO REFRESH ON INIT + RECALC
+   ========================================================= */
+
+if(!window.__RASI_PADA_TABLES__){
+  window.__RASI_PADA_TABLES__ = true;
+
+  const _origRecalc = recalc;
+  recalc = function(){
+    _origRecalc();
+    buildRasiDateTable();
+    buildNakshatraPadaTable();
+	updateCurrentAge();
+  };
+}
+
+/* Initial load */
+setTimeout(()=>{
+  buildRasiDateTable();
+  buildNakshatraPadaTable();
+},200);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
